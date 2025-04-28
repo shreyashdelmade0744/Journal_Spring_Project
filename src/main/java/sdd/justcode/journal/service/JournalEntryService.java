@@ -3,6 +3,7 @@ package sdd.justcode.journal.service;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import sdd.justcode.journal.entity.JournalEntity;
 import sdd.justcode.journal.entity.UserEntity;
 import sdd.justcode.journal.repository.JournalEntryRepo;
@@ -19,13 +20,18 @@ public class JournalEntryService {
     @Autowired
     private UserEntryService userEntryService;
 
+    @Transactional
     public void saveJournalEntry(JournalEntity journalEntry, String username){
-
+        try {
         UserEntity user = userEntryService.findByUsername(username);
         journalEntry.setData(LocalDateTime.now());
         JournalEntity saved = JournalEntryRepo.save(journalEntry);
         user.getJournalEntries().add(saved);
         userEntryService.saveUserEntry(user);
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
     }
 
     public void saveJournalEntry(JournalEntity oldEntry) {
