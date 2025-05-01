@@ -9,6 +9,7 @@ public interface UserEntryRepo extends MongoRepository<UserEntity, ObjectId>{
 
      UserEntity findByUsername(String username);
 
+     void deleteByUsername(String username);
 }
 
 //MongoRepository is the interface which is used to apply crud operations directly

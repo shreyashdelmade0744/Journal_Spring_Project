@@ -3,8 +3,11 @@ package sdd.justcode.journal.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import sdd.justcode.journal.entity.UserEntity;
+import sdd.justcode.journal.repository.UserEntryRepo;
 import sdd.justcode.journal.service.UserEntryService;
 
 import java.util.List;
@@ -17,19 +20,20 @@ public class UserEntryController {
     @Autowired
     private UserEntryService userEntryService ;
 
-    @GetMapping
-    public List<UserEntity> getall(){
-        return userEntryService.getAll();
+    @Autowired
+    private UserEntryRepo userEntryRepo;
+
+    //just for testing purpose
+    @GetMapping("/test")
+    public String test(){
+        return "user endpoint is accessible";
     }
 
-    @PostMapping
-    public void createUser(@RequestBody UserEntity user){
-        userEntryService.saveUserEntry(user);
-    }
+    @PutMapping
+    public ResponseEntity<?> updateUser(@RequestBody UserEntity user){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
 
-
-    @PutMapping("/{username}")
-    public ResponseEntity<?> findByUsername(@RequestBody UserEntity user,@PathVariable String username ){
         UserEntity userInDB = userEntryService.findByUsername(username);
         if(userInDB!=null){
             userInDB.setUsername(user.getUsername());
@@ -38,4 +42,21 @@ public class UserEntryController {
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        userEntryRepo.deleteByUsername(username);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    }
+
+
+
+
+
+
+
 }

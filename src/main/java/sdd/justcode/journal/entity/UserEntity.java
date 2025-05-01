@@ -25,4 +25,9 @@ public class UserEntity {
     @DBRef
     private List<JournalEntity> journalEntries = new ArrayList<>();
 
+    //for authorization
+    private List<String> roles; // what the user is authorized to do , if the user is authenticated
+    // roles means what he can do like he is normal user , admin or etc
+
+
 }
