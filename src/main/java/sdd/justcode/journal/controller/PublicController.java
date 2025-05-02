@@ -14,13 +14,13 @@ public class PublicController {
 
     @GetMapping("/healthcheck")
     public String healthcheck() {
-        return "health check working fine";
+        return "health check is working fine";
     }
 
 
     @PostMapping("/create-user")
     public void createUser(@RequestBody UserEntity user){
-        userEntryService.saveUserEntry(user);
+        userEntryService.saveNewUser(user);
     }
 
 }

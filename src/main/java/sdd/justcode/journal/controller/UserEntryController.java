@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import sdd.justcode.journal.entity.UserEntity;
 import sdd.justcode.journal.repository.UserEntryRepo;
 import sdd.justcode.journal.service.UserEntryService;
-
-import java.util.List;
 //controller ----> service -----> repository
 
 @RestController
@@ -38,7 +36,7 @@ public class UserEntryController {
         if(userInDB!=null){
             userInDB.setUsername(user.getUsername());
             userInDB.setPassword(user.getPassword());
-            userEntryService.saveUserEntry(userInDB);
+            userEntryService.saveNewUser(userInDB);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -47,6 +45,7 @@ public class UserEntryController {
     public ResponseEntity<?> deleteUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
+
         userEntryRepo.deleteByUsername(username);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
